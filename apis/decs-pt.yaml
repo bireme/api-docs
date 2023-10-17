@@ -2,10 +2,18 @@ openapi: 3.0.3
 info:
   title: DeCS API
   description: |-
-    O serviço DeCS permite a recuperação remota, via chamada http, de seus conceitos através de três tipos de busca: a busca hierárquica, a busca por palavras e a busca por palavras com operadores booleanos.
+    O serviço DeCS permite a recuperação remota, via chamada http, de seus conceitos através de três tipos de busca: a **busca hierárquica**, a **busca por palavras** e a **busca por palavras com operadores booleanos**.
+
+    ## Nota importante
+
+    A consulta ao [DeCS online](https://decs.bvsalud.org/) não pressupõe o uso desta API, bem como não há a necessidade de licença de uso para consultá-lo online.
+
+    Para recuperar documentos e artigos, a pesquisa deve ser feita no [portal da BVS](https://pesquisa.bvsalud.org/portal), podendo-se usar os descritores encontrados na página do DeCS.
 
     ## Direito de acesso
-    Para proteção dos direitos de autor, os serviços web do DeCS são oferecidos gratuitamente por meio de uma licença de uso.
+
+    Para proteção dos direitos de autor, o acesso a API DeCS são oferecidos gratuitamente por meio de uma licença de uso.
+
     Assim, pedimos que primeiramente preencha o nosso [Formulario padrão pré-Licença de uso do DeCS](https://goo.gl/forms/8e5YbUm500COhQGF2).
   version: V2
 externalDocs:
