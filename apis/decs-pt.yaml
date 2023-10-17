@@ -12,7 +12,7 @@ externalDocs:
   description: Sobre o DeCS
   url: https://decs.bvsalud.org/sobre-o-decs/
 servers:
-  - url: https://api.teste.bvsalud.org/decs/v2/
+  - url: https://api.bvsalud.org/decs/v2/
 
 paths:
   /get-tree:
@@ -37,7 +37,6 @@ paths:
           in: query
           description: Código hierárquico. Ex. A01
           required: false
-          default: ""
           explode: true
           schema:
             type: string
@@ -97,7 +96,6 @@ paths:
           in: query
           description: Palavras a serem pesquisadas. Ex. Macaca mulatta
           required: true
-          default: ""
           explode: true
           schema:
             type: string
@@ -199,7 +197,6 @@ paths:
           in: query
           description: Palavras a serem pesquisadas. Ex. Macaca mulatta
           required: true
-          default: ""
           explode: true
           schema:
             type: string
