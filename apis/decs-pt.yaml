@@ -29,9 +29,6 @@ paths:
         *es* para espanhol (&lang=es) ou *en* para inglês (&lang=en). Quando não especificado, o idioma escolhido como padrão é o português (&lang=pt).
 
       operationId: getTree
-      produces:
-        - "application/json"
-        - "application/xml"
       parameters:
         - name: tree_id
           in: query
@@ -88,9 +85,6 @@ paths:
         Assim como na busca hierárquica, o parâmetro *lang* pode ser utilizado para se especificar o idioma do conteúdo do resultado da pesquisa, sendo o português o idioma padrão utilizado caso o parâmetro não tenha sido especificado.
 
       operationId: searchByWords
-      produces:
-        - "application/json"
-        - "application/xml"
       parameters:
         - name: words
           in: query
@@ -189,9 +183,6 @@ paths:
         407 - palavra a palavra, termo autorizado, termos sinônimos e termos históricos
 
       operationId: searchBoolean
-      produces:
-        - "application/json"
-        - "application/xml"
       parameters:
         - name: bool
           in: query
@@ -231,7 +222,7 @@ paths:
           description: Resultado não localizado ou erro no resultado
       security:
         - apikey: []
-
+components:
   securitySchemes:
     apikey:
       type: apiKey
