@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: DeCS API
+  description: |-
+    O serviço DeCS permite a recuperação remota, via chamada http, de seus conceitos através de três tipos de busca: a busca hierárquica, a busca por palavras e a busca por palavras com operadores booleanos.
+
+    ## Direito de acesso
+    Para proteção dos direitos de autor, os serviços web do DeCS são oferecidos gratuitamente por meio de uma licença de uso.
+    Assim, pedimos que primeiramente preencha o nosso [Formulario padrão pré-Licença de uso do DeCS](https://goo.gl/forms/8e5YbUm500COhQGF2).
+  version: V2
+externalDocs:
+  description: Sobre o DeCS
+  url: https://decs.bvsalud.org/sobre-o-decs/
+servers:
+  - url: https://api.teste.bvsalud.org/decs/v2/
+
+paths:
+  /get-tree:
+    get:
+      tags:
+        - Busca hierárquica
+      summary: Recupera descritor pelo código hierárquico.
+      description: |-
+        Permite a recuperação de termos no DeCS através do seus códigos hierárquicos
+
+        Quando, por exemplo, o código hierárquico  *B01.050.150.900.649.313.988.400.112.199.120.510.550* é utilizado recupera-se o conceito *Macaca mulatta*.
+
+        O idioma do conteúdo do resultado da pesquisa pode ser especificado, acrescentando-se na url o parâmetro *lang* com o valor *pt* para português (&lang=pt),
+        *es* para espanhol (&lang=es) ou *en* para inglês (&lang=en). Quando não especificado, o idioma escolhido como padrão é o português (&lang=pt).
+
+      operationId: getTree
+      produces:
+        - "application/json"
+        - "application/xml"
+      parameters:
+        - name: tree_id
+          in: query
+          description: Código hierárquico. Ex. A01
+          required: false
+          default: ""
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Idioma do conteúdo do resultado
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Formato da resposta
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Resultado com sucesso
+        '401':
+          description: Não autorizado. Código da apikey não informado ou inválido
+        '404':
+          description: Resultado não localizado ou erro no resultado
+      security:
+        - apikey: []
+
+
+  /search-by-words:
+    get:
+      tags:
+        - Busca por palavras
+      summary: Pesquisa descritores contendo as palavras informadas.
+      description: |-
+        Permite através do parâmetro *words*, a pesquisa de *palavra a palavra*, as quais são internamente conectadas com o operador AND.
+
+        Quando, por exemplo, a expressão *Macaca mulatta* é informada ela é internamente convertida para "Macaca AND mulatta"
+
+        A busca por palavras é realizada no índice contendo os termos autorizados, os termos sinônimos e os termos históricos do DeCS, todos indexados com a técnica de indexação palavra a palavra.
+
+        Assim como na busca hierárquica, o parâmetro *lang* pode ser utilizado para se especificar o idioma do conteúdo do resultado da pesquisa, sendo o português o idioma padrão utilizado caso o parâmetro não tenha sido especificado.
+
+      operationId: searchByWords
+      produces:
+        - "application/json"
+        - "application/xml"
+      parameters:
+        - name: words
+          in: query
+          description: Palavras a serem pesquisadas. Ex. Macaca mulatta
+          required: true
+          default: ""
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Idioma do conteúdo do resultado
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Formato da resposta
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Resultado com sucesso
+        '401':
+          description: Não autorizado. Código da apikey não informado ou inválido
+        '404':
+          description: Resultado não localizado ou erro no resultado
+      security:
+        - apikey: []
+
+  /search-boolean:
+    get:
+      tags:
+        - Busca por palavras com operadores booleanos
+      summary: Pesquisa descritores usando expressão booleana
+      description: |-
+        Permite o uso de uma expressão booleana, através do parâmetro de busca *bool*, onde os termos são conectados por operadores booleanos AND, OR e AND NOT.
+
+        Pode-se especificar qual o índice em que será feita a pesquisa, colocando-se o código do mesmo (veja “Prefixos dos índices de pesquisa” abaixo) como prefixo da expressão de busca:
+        <prefixo do índice> <expressão de busca>
+
+        **Exemplos com operadores e índices**
+
+        A pesquisa:
+
+        *101 Macaca OR mulatta*
+
+        Procura os termos “macaca” ou “mulatta” no índice criado por campo inteiro tendo somente termos autorizados.
+
+        Se ao invés do prefixo 101 se usasse o prefixo 407 (palavra a palavra, termo autorizado, termos sinônimos e termos históricos) seriam recuperados também, além de “Macaca”, os termos “Macaca fascicularis”, “Macaca mulatta”, “Macaca nemestrina” e “Macaca radiata”.
+
+        Se não for especificado o código do índice a ser pesquisado, o índice utilizado como padrão será o de palavra a palavra, termo autorizado, termos sinônimos e termos históricos (valor 407).
+
+        Se a expressão de busca não contiver operadores booleanos, então a mesma será considerada como sendo campo inteiro.
+
+
+
+        **Prefixos dos índices de pesquisa**
+
+        101 - campo inteiro, termo autorizado
+
+        102 - campo inteiro, termos sinônimos
+
+        104 - campo inteiro, termos históricos
+
+        103 - campo inteiro, termo autorizado e termos sinônimos
+
+        105 - campo inteiro, termo autorizado e termos históricos
+
+        106 - campo inteiro, termos sinônimos e termos históricos
+
+        107 - campo inteiro, termo autorizado, termos sinônimos e termos históricos
+
+        401 - palavra a palavra, termo autorizado
+
+        402 - palavra a palavra, termos sinônimos
+
+        404 - palavra a palavra, termos históricos
+
+        403 - palavra a palavra, termo autorizado e termos sinônimos
+
+        405 - palavra a palavra, termo autorizado e termos históricos
+
+        406 - palavra a palavra, termos sinônimos e termos históricos
+
+        407 - palavra a palavra, termo autorizado, termos sinônimos e termos históricos
+
+      operationId: searchBoolean
+      produces:
+        - "application/json"
+        - "application/xml"
+      parameters:
+        - name: bool
+          in: query
+          description: Palavras a serem pesquisadas. Ex. Macaca mulatta
+          required: true
+          default: ""
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Idioma do conteúdo do resultado
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Formato da resposta
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Resultado com sucesso
+        '401':
+          description: Não autorizado. Código da apikey não informado ou inválido
+        '404':
+          description: Resultado não localizado ou erro no resultado
+      security:
+        - apikey: []
+
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: apikey
+      in: header
