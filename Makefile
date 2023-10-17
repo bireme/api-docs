@@ -15,7 +15,7 @@ tag:
 dev_build:
 	@docker-compose -f $(COMPOSE_FILE_DEV) build
 
-dev_up:
+dev_start:
 	@docker-compose -f $(COMPOSE_FILE_DEV) up -d
 
 dev_run:
@@ -34,7 +34,7 @@ dev_rm:
 	@docker-compose -f $(COMPOSE_FILE_DEV) rm -f
 
 dev_sh:
-	@docker-compose -f $(COMPOSE_FILE_DEV) exec fi_admin sh
+	@docker-compose -f $(COMPOSE_FILE_DEV) exec api_docs sh
 
 
 ## docker-compose prod
@@ -42,7 +42,7 @@ prod_build:
 	@docker build . -t $(IMAGE_TAG)
 	@docker tag $(IMAGE_TAG) $(TAG_LATEST)
 
-prod_up:
+prod_start:
 	@docker-compose --compatibility up -d
 
 prod_run:
@@ -69,5 +69,5 @@ prod_rollback:
 	@docker-compose --compatibility up -d
 
 prod_exec_shell:
-	@docker-compose --compatibility exec fi_admin sh
+	@docker-compose --compatibility exec api_docs sh
 
