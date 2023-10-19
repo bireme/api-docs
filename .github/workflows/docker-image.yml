@@ -19,7 +19,7 @@ jobs:
   
     - name: Build and push docker image
       run: |
-        echo "VERSAO DO TAG DA IMAGEM A SER UTILIZADA: ${{ steps.get_tag.outputs.TAG }}"
-        #docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest
-        #docker tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:${{ steps.get_tag.outputs.TAG }}
-        #docker push ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs
+        echo "TAG IMAGE VERSION: ${{ steps.get_tag.outputs.TAG }}"
+        docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest
+        docker tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:${{ steps.get_tag.outputs.TAG }}
+        docker push ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs
