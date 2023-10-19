@@ -22,4 +22,4 @@ jobs:
         echo "TAG IMAGE VERSION: ${{ steps.get_tag.outputs.TAG }}"
         docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest
         docker tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:${{ steps.get_tag.outputs.TAG }}
-        docker push ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs
+        docker push ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs --all-tags
