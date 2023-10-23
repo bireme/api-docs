@@ -25,8 +25,9 @@ jobs:
         echo "TAG=$(git describe --tags --long --always | sed 's/-g[a-z0-9]\{7\}//' | sed 's/-/\./')" >> $GITHUB_OUTPUT
   
     - name: Build and push docker image
-      run: |
-        echo "TAG IMAGE VERSION: ${{ steps.get_tag.outputs.TAG }}"
-        docker build . --file Dockerfile --tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest
-        docker tag ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:${{ steps.get_tag.outputs.TAG }}
-        docker push ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs --all-tags
+      uses: docker/build-push-action@v5
+      with:
+        labels: |
+          ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:latest
+          ${{ secrets.DOCKER_REGISTRY }}/bireme/api-docs:${{ steps.get_tag.outputs.TAG }}
+        push: true
