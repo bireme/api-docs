@@ -1,6 +1,7 @@
-IMAGE_NAME=bireme/api-documentation
-#APP_VERSION?=$(shell git describe --tags --long --always | sed 's/-g[a-z0-9]\{7\}//' | sed 's/-/\./')
-APP_VERSION?=0.1
+include .env
+
+IMAGE_NAME=$(REGISTRY)/bireme/api-docs
+APP_VERSION?=$(shell git describe --tags --long --always | sed 's/-g[a-z0-9]\{7\}//' | sed 's/-/\./')
 TAG_LATEST=$(IMAGE_NAME):latest
 
 COMPOSE_FILE_DEV=docker-compose-dev.yml
@@ -41,6 +42,18 @@ dev_sh:
 prod_build:
 	@docker build . -t $(IMAGE_TAG)
 	@docker tag $(IMAGE_TAG) $(TAG_LATEST)
+
+prod_pull_all:
+	@echo "$(REGISTRY_PASSWORD)" | docker login $(REGISTRY) --username=$(REGISTRY_USERNAME) --password-stdin
+	@docker pull $(IMAGE_NAME) --all-tags
+
+prod_pull_latest:
+	@echo "$(REGISTRY_PASSWORD)" | docker login $(REGISTRY) --username=$(REGISTRY_USERNAME) --password-stdin
+	@docker pull $(TAG_LATEST)
+
+prod_push:
+	@echo "$(REGISTRY_PASSWORD)" | docker login $(REGISTRY) --username=$(REGISTRY_USERNAME) --password-stdin
+	@docker push $(IMAGE_NAME) --all-tags
 
 prod_start:
 	@docker-compose --compatibility up -d

@@ -4,7 +4,7 @@ services:
   api_docs:
     container_name: api-docs
     restart: always
-    image: bireme/api-documentation:latest
+    image: ${REGISTRY}/bireme/api-docs:latest
     ports:
         - ${APP_PORT}:8080
     env_file:
