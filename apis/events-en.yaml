@@ -15,7 +15,6 @@ paths:
       tags:
         - List events
       summary: List events from the directory
-      description:
       operationId: list
       parameters:
         - name: limit
@@ -55,7 +54,6 @@ paths:
       tags:
         - Next events
       summary: Return next events based on the current date
-      description:
       operationId: NextEvents
       parameters:
         - name: fq
@@ -102,7 +100,6 @@ paths:
       tags:
         - Search events
       summary: Search events by query expression
-      description:
       operationId: searchByWords
       parameters:
         - name: q
