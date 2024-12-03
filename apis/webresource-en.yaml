@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Web resources from LIS (Health Information Locator)
+  description: |-
+     Catalog of portals, social networks, image banks, and other internet resources in the health area selected according to quality and relevance criteria for health systems and services.
+
+     LIS database is updated by over 80 institutions that are members of the VHL (Virtual Health Library) network.
+
+  version: v1
+servers:
+  - url: https://api.bvsalud.org/resource/v1/
+
+paths:
+  /:
+    get:
+      tags:
+        - List web resources
+      summary: List web resources from LIS database
+      operationId: list
+      parameters:
+        - name: limit
+          in: query
+          description: The limit parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The offset parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid
+        '404':
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+  /search/:
+    get:
+      tags:
+        - Search web resources
+      summary: Search web resources by query expression
+      operationId: searchByWords
+      parameters:
+        - name: q
+          in: query
+          description: |-
+              The q parameter is used to inform a expression to be searched.
+
+              It's possible to use boolean operators **(AND, OR, AND NOT)** in the query expression.
+
+              Example **public AND health**
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: fq
+          in: query
+          description: The fq parameter is used to filter the result by a expression. Example **country:"Brasil"**
+          required: false
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: The count parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: start
+          in: query
+          description: The start parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid
+        '404':
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+components:
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: apikey
+      in: header

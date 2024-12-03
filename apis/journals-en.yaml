@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Journals on Health Sciences
+  description: |-
+     Catalog of scientific and technical journals in the health area.
+
+     The catalog includes journals from the VHL (Virtual Health Library), PAHO or BIREME. The catalog is published on the internet and is freely accessible.
+
+  version: v1
+servers:
+  - url: https://api.bvsalud.org/title/v1/
+
+paths:
+  /:
+    get:
+      tags:
+        - List journals
+      summary: List journals from VHL database
+      operationId: list
+      parameters:
+        - name: limit
+          in: query
+          description: The limit parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The offset parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid
+        '404':
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+  /search/:
+    get:
+      tags:
+        - Search journals
+      summary: Search journals by query expression
+      operationId: searchByWords
+      parameters:
+        - name: q
+          in: query
+          description: |-
+              The q parameter is used to inform a expression to be searched.
+
+              It's possible to use boolean operators **(AND, OR, AND NOT)** in the query expression.
+
+              Example **public AND health**
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: fq
+          in: query
+          description: The fq parameter is used to filter the result by a expression. Example **country:"Brasil"**
+          required: false
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: The count parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: start
+          in: query
+          description: The start parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid
+        '404':
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+components:
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: apikey
+      in: header
