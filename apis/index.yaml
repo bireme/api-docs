@@ -1,0 +1,12 @@
+openapi: 3.0.3
+info:
+  title: VHL API's
+  description: |-
+    This is the initial page for the VHL API documentation.
+
+    Here you can find a list of available APIs that can be selected using the dropdown at the top of the page.
+
+    Each API provides detailed information about its endpoints, parameters, and responses to help you integrate with our services efficiently.
+  version: BIREME/OPS/OMS
+servers:
+  - url: https://api.bvsalud.org/
