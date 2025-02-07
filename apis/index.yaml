@@ -10,3 +10,6 @@ info:
   version: BIREME/OPS/OMS
 servers:
   - url: https://api.bvsalud.org/
+
+paths: {}
+components: {}
