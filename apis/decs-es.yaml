@@ -1,0 +1,222 @@
+openapi: 3.0.3
+info:
+  title: DeCS API
+  description: |-
+    El servicio DeCS permite la recuperación remota a través de llamadas HTTP de sus conceptos mediante tres tipos de búsqueda: **búsqueda jerárquica**, **búsqueda por palabras** y **búsqueda por palabras con operadores booleanos**.
+
+    ## Nota Importante
+
+    Consultar [DeCS](https://decs.bvsalud.org/) no requiere el uso de esta API, ni es necesario una licencia de uso para consultarlo en línea.
+
+    Para recuperar documentos y artículos, las búsquedas deben realizarse en el [portal BVS](https://pesquisa.bvsalud.org/portal), utilizando los descriptores encontrados en la página de DeCS.
+
+    ## Derechos de Acceso
+
+    Para proteger los derechos de autor, el acceso a la API DeCS se ofrece de forma gratuita mediante una licencia de uso.
+
+    Por lo tanto, solicitamos que primero complete nuestro [Formulario Estándar de Uso Previo de Licencia para DeCS](https://goo.gl/forms/8e5YbUm500COhQGF2).
+  version: V2
+externalDocs:
+  description: Acerca de DeCS
+  url: https://decs.bvsalud.org/sobre-o-decs/
+servers:
+  - url: https://api.bvsalud.org/decs/v2/
+
+paths:
+  /get-tree:
+    get:
+      tags:
+        - Búsqueda Jerárquica
+      summary: Recupera un descriptor por código jerárquico.
+      description: |-
+        Permite recuperar términos en DeCS utilizando sus códigos jerárquicos.
+
+        Por ejemplo, cuando se usa el código jerárquico *B01.050.150.900.649.313.988.400.112.199.120.510.550*, se recupera el concepto *Macaca mulatta*.
+
+        El idioma del contenido del resultado de la búsqueda se puede especificar agregando el parámetro *lang* a la URL, con el valor *pt* para portugués (&lang=pt), *es* para español (&lang=es) o *en* para inglés (&lang=en). Si no se especifica, el idioma predeterminado es portugués (&lang=pt).
+
+      operationId: getTree
+      parameters:
+        - name: tree_id
+          in: query
+          description: Código jerárquico. Ej. A01
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Idioma del contenido del resultado de la búsqueda
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Formato de respuesta
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Resultado exitoso
+        '401':
+          description: No autorizado. Clave API no proporcionada o inválida
+        '404':
+          description: Resultado no encontrado o error en el resultado
+      security:
+        - apikey: []
+
+  /search-by-words:
+    get:
+      tags:
+        - Búsqueda por Palabras
+      summary: Busca descriptores que contengan las palabras especificadas.
+      description: |-
+        Permite buscar descriptores utilizando el parámetro *words*, donde cada palabra está internamente conectada con el operador AND.
+
+        Por ejemplo, cuando se proporciona la expresión *Macaca mulatta*, se convierte internamente en "Macaca AND mulatta".
+
+        La búsqueda por palabras se realiza en el índice que contiene términos autorizados, términos sinónimos y términos históricos en DeCS, todos indexados mediante la técnica palabra por palabra.
+
+        Al igual que en la búsqueda jerárquica, el parámetro *lang* se puede utilizar para especificar el idioma del contenido del resultado de la búsqueda, con el portugués como predeterminado si no se especifica el parámetro.
+
+      operationId: searchByWords
+      parameters:
+        - name: words
+          in: query
+          description: Palabras a buscar. Ej. Macaca mulatta
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Idioma del contenido del resultado de la búsqueda
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Formato de respuesta
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Resultado exitoso
+        '401':
+          description: No autorizado. Clave API no proporcionada o inválida
+        '404':
+          description: Resultado no encontrado o error en el resultado
+      security:
+        - apikey: []
+
+
+  /search-boolean:
+    get:
+      tags:
+        - Búsqueda de Palabras con Operadores Booleanos
+      summary: Busca descriptores utilizando una expresión booleana.
+      description: |-
+        Permite el uso de una expresión booleana a través del parámetro de búsqueda *bool*, donde los términos están conectados por los operadores booleanos AND, OR y AND NOT.
+
+        El índice en el que se realiza la búsqueda puede especificarse colocando su código (ver "Prefijos de Índices de Búsqueda" a continuación) como prefijo de la expresión de búsqueda:
+        <prefijo de índice> <expresión de búsqueda>
+
+        **Ejemplos con Operadores e Índices**
+
+        La búsqueda:
+
+        101 Macaca OR mulatta
+
+        Busca los términos “Macaca” o “Mulatta” en el índice creado para búsquedas de campo completo que contienen solo términos autorizados.
+
+        Si se utiliza el prefijo 407 (palabra por palabra, término autorizado, sinónimos y términos históricos) en lugar del prefijo 101, la búsqueda también recuperará “Macaca fascicularis”, “Macaca mulatta”, “Macaca nemestrina” y “Macaca radiata”.
+
+        Si no se especifica un código de índice, el valor predeterminado será palabra por palabra, término autorizado, sinónimos y términos históricos (valor 407).
+
+        Si la expresión de búsqueda no contiene operadores booleanos, se considerará una búsqueda de campo completo.
+
+        Prefijos de Índices de Búsqueda
+
+        101 - campo completo, término autorizado
+
+        102 - campo completo, términos sinónimos
+
+        104 - campo completo, términos históricos
+
+        103 - campo completo, término autorizado y sinónimos
+
+        105 - campo completo, término autorizado y términos históricos
+
+        106 - campo completo, términos sinónimos y términos históricos
+
+        107 - campo completo, término autorizado, términos sinónimos y términos históricos
+
+        401 - palabra por palabra, término autorizado
+
+        402 - palabra por palabra, términos sinónimos
+
+        404 - palabra por palabra, términos históricos
+
+        403 - palabra por palabra, término autorizado y sinónimos
+
+        405 - palabra por palabra, término autorizado y términos históricos
+
+        406 - palabra por palabra, términos sinónimos y términos históricos
+
+        407 - palabra por palabra, término autorizado, términos sinónimos y términos históricos
+      operationId: searchBoolean
+      parameters:
+        - name: bool
+          in: query
+          description: Words to be searched. Ex. Macaca mulatta
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Language of the search result content
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Response format
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Successful result

@@ -1,0 +1,222 @@
+openapi: 3.0.3
+info:
+  title: DeCS API
+  description: |-
+    The DeCS service allows remote retrieval via HTTP calls of its concepts through three types of searches: **hierarchical search**, **word search**, and **word search with boolean operators**.
+
+    ## Important Note
+
+    Querying [DeCS](https://decs.bvsalud.org/) does not require using this API, nor is a usage license required to consult it online.
+
+    To retrieve documents and articles, searches should be performed on the [BVS portal](https://pesquisa.bvsalud.org/portal), using the descriptors found on the DeCS page.
+
+    ## Access Rights
+
+    To protect copyright, access to the DeCS API is offered free of charge through a usage license.
+
+    Therefore, we ask that you first fill out our [Standard Pre-License Usage Form for DeCS](https://goo.gl/forms/8e5YbUm500COhQGF2).
+  version: V2
+externalDocs:
+  description: About DeCS
+  url: https://decs.bvsalud.org/sobre-o-decs/
+servers:
+  - url: https://api.bvsalud.org/decs/v2/
+
+paths:
+  /get-tree:
+    get:
+      tags:
+        - Hierarchical Search
+      summary: Retrieves a descriptor by hierarchical code.
+      description: |-
+        Allows retrieving terms in DeCS using their hierarchical codes.
+
+        For example, when the hierarchical code *B01.050.150.900.649.313.988.400.112.199.120.510.550* is used, the concept *Macaca mulatta* is retrieved.
+
+        The language of the search result content can be specified by adding the *lang* parameter to the URL, with the value *pt* for Portuguese (&lang=pt),
+        *es* for Spanish (&lang=es), or *en* for English (&lang=en). If not specified, the default language is Portuguese (&lang=pt).
+
+      operationId: getTree
+      parameters:
+        - name: tree_id
+          in: query
+          description: Hierarchical code. Ex. A01
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Language of the search result content
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Response format
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Successful result
+        '401':
+          description: Unauthorized. API key not provided or invalid
+        '404':
+          description: Result not found or error in the result
+      security:
+        - apikey: []
+
+  /search-by-words:
+    get:
+      tags:
+        - Word Search
+      summary: Searches for descriptors containing the specified words.
+      description: |-
+        Allows searching for descriptors using the *words* parameter, where each word is internally connected with the AND operator.
+
+        For example, when the expression *Macaca mulatta* is provided, it is internally converted to "Macaca AND mulatta".
+
+        The word search is performed in the index containing authorized terms, synonym terms, and historical terms in DeCS, all indexed using the word-by-word technique.
+
+        As in the hierarchical search, the *lang* parameter can be used to specify the language of the search result content, with Portuguese as the default if the parameter is not specified.
+
+      operationId: searchByWords
+      parameters:
+        - name: words
+          in: query
+          description: Words to be searched. Ex. Macaca mulatta
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Language of the search result content
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Response format
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Successful result
+        '401':
+          description: Unauthorized. API key not provided or invalid
+        '404':
+          description: Result not found or error in the result
+      security:
+        - apikey: []
+
+  /search-boolean:
+    get:
+      tags:
+        - Word Search with Boolean Operators
+      summary: Searches for descriptors using a boolean expression.
+      description: |-
+        Allows using a boolean expression through the *bool* search parameter, where terms are connected by boolean operators AND, OR, and AND NOT.
+
+        The index in which the search is conducted can be specified by placing its code (see “Search Index Prefixes” below) as a prefix to the search expression:
+        <index prefix> <search expression>
+
+        **Examples with Operators and Indexes**
+
+        The search:
+
+        *101 Macaca OR mulatta*
+
+        Searches for the terms “Macaca” or “Mulatta” in the index created for full-field searches containing only authorized terms.
+
+        If prefix 407 (word-by-word, authorized term, synonyms, and historical terms) is used instead of prefix 101, the search would also retrieve “Macaca fascicularis”, “Macaca mulatta”, “Macaca nemestrina”, and “Macaca radiata”.
+
+        If no index code is specified, the default used will be word-by-word, authorized term, synonyms, and historical terms (value 407).
+
+        If the search expression contains no boolean operators, it will be considered a full-field search.
+
+        **Search Index Prefixes**
+
+        101 - full field, authorized term
+
+        102 - full field, synonym terms
+
+        104 - full field, historical terms
+
+        103 - full field, authorized term and synonyms
+
+        105 - full field, authorized term and historical terms
+
+        106 - full field, synonym terms and historical terms
+
+        107 - full field, authorized term, synonym terms, and historical terms
+
+        401 - word-by-word, authorized term
+
+        402 - word-by-word, synonym terms
+
+        404 - word-by-word, historical terms
+
+        403 - word-by-word, authorized term and synonyms
+
+        405 - word-by-word, authorized term and historical terms
+
+        406 - word-by-word, synonym terms and historical terms
+
+        407 - word-by-word, authorized term, synonym terms, and historical terms
+      operationId: searchBoolean
+      parameters:
+        - name: bool
+          in: query
+          description: Words to be searched. Ex. Macaca mulatta
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Language of the search result content
+          required: false
+          schema:
+            type: string
+            default: pt
+            enum:
+              - pt
+              - es
+              - en
+              - fr
+        - name: format
+          in: query
+          description: Response format
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Successful result
