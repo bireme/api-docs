@@ -50,6 +50,40 @@ paths:
       security:
         - apikey: []
 
+  /{mediaId}/:
+    get:
+      tags:
+        - Get media
+      summary: Retrieve a specific media metadata from VHL database
+      operationId: getMediaById
+      parameters:
+        - name: mediaId
+          in: path
+          description: The unique identifier of the event. Example  **1234**
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+
+      responses:
+        '200':
+          description: Successful operation - Media details retrieved.
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid.
+        '404':
+          description: Media not found.
+      security:
+        - apikey: []
+
   /search/:
     get:
       tags:

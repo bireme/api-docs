@@ -50,6 +50,40 @@ paths:
       security:
         - apikey: []
 
+  /{journalId}/:
+    get:
+      tags:
+        - Get journal
+      summary: Retrieve a specific journal from VHL database
+      operationId: getJournalById
+      parameters:
+        - name: journalId
+          in: path
+          description: The unique identifier of the journal. Example  **1890**
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+
+      responses:
+        '200':
+          description: Successful operation - Journal details retrieved.
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid.
+        '404':
+          description: Journal not found.
+      security:
+        - apikey: []
+
   /search/:
     get:
       tags:

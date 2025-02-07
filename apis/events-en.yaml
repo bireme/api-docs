@@ -93,7 +93,39 @@ paths:
       security:
         - apikey: []
 
+  /{eventId}/:
+    get:
+      tags:
+        - Get event
+      summary: Retrieve a specific event from VHL database
+      operationId: getEventById
+      parameters:
+        - name: eventId
+          in: path
+          description: The unique identifier of the event. Example  **28530**
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
 
+      responses:
+        '200':
+          description: Successful operation - Event details retrieved.
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid.
+        '404':
+          description: Event not found.
+      security:
+        - apikey: []
 
   /search/:
     get:

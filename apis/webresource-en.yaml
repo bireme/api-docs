@@ -50,6 +50,41 @@ paths:
       security:
         - apikey: []
 
+  /{resourceId}/:
+    get:
+      tags:
+        - Get web resource
+      summary: Retrieve a specific web resource from VHL database
+      operationId: getResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: The unique identifier of the web resource. Example  **50**
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+
+      responses:
+        '200':
+          description: Successful operation - Web resource details retrieved.
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid.
+        '404':
+          description: Web resource not found.
+      security:
+        - apikey: []
+
+
   /search/:
     get:
       tags:
