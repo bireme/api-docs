@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: VHL Bibliographic Database
+  description: |-
+
+    The most important and comprehensive database of LA&C with more than 1 million records of peer reviewed journals, thesis and dissertations, government documents, annals of congresses and books, published in 30 countries in the region.
+
+    It includes systematic reviews, randomized controlled clinical trials, evidence synthesis, health technology evaluation studies, economic evaluation studies, clinical practice guidelines, technical reports, case reports and others.
+
+    Maintained and updated by a network composed of more than 600 educational, governmental and health research institutions, and coordinated by BIREME / PAHO / WHO.
+
+    Adopts the DeCS - Descriptors in Health Sciences, with descriptors and synonyms contextualized to the region with exclusive categories of Public Health, Homeopathy, Health Surveillance and Science and Health. DeCS is an extended translation of the MeSH.
+
+    It is a necessary source of information in the search for primary studies of AL&C for systematic reviews, and it is recommended by Cochrane Collaboration in the Cochrane Handbook.
+
+    It is included in the WHO Global Index Medicus, in Epistemonikos, and complements MEDLINE / PubMed.
+
+  version: v1
+servers:
+  - url: https://api.bvsalud.org/bibliographic/v1/
+
+paths:
+  /:
+    get:
+      tags:
+        - List bibliographic resources
+      summary: List bibliographic resources from VHL database
+      operationId: list
+      parameters:
+        - name: limit
+          in: query
+          description: The limit parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The offset parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          description: |-
+            Filter for the status of the record.
+
+            -3: Migration
+
+            -2: Harvesting
+
+            -1: Draft
+
+            0: LILACS-Express
+
+            1: Published
+
+            2: Refused
+
+            3: Deleted
+          required: false
+          schema:
+            type: string
+            default: 1
+            enum:
+              - -3
+              - -2
+              - -1
+              - 0
+              - 1
+              - 2
+              - 3
+        - name: indexed_database
+          in: query
+          description: Filter by database acronym for the "indexed in" field. Example **LILACS**
+          required: false
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Filter by database record id. Example **1589010**
+          required: false
+          schema:
+            type: string
+
+        - name: updated_time
+          in: query
+          description: |-
+            Filter by record update date, use updated_time__gte (greater than) or updated_time__lte (less than) and the date in YYYY-MM-DD format
+          required: false
+          schema:
+            type: string
+
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid
+        '404':
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+  /{resourceId}/:
+    get:
+      tags:
+        - Get bibliographic resource
+      summary: Retrieve a specific bibliographic resource from VHL database
+      operationId: getResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: The unique identifier of the web resource. Example  **50**
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+
+      responses:
+        '200':
+          description: Successful operation - Web resource details retrieved.
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid.
+        '404':
+          description: Web resource not found.
+      security:
+        - apikey: []
+
+
+  /search/:
+    get:
+      tags:
+        - Search bibliographic resources
+      summary: Search bibliographic resources by query expression
+      operationId: searchByWords
+      parameters:
+        - name: q
+          in: query
+          description: |-
+              The q parameter is used to inform a expression to be searched.
+
+              It's possible to use boolean operators **(AND, OR, AND NOT)** in the query expression.
+
+              Example **public AND health**
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: fq
+          in: query
+          description: The fq parameter is used to filter the result by a expression. Example **country:"Brasil"**
+          required: false
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: The count parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: start
+          in: query
+          description: The start parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized. Apikey code not provided or invalid
+        '404':
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+components:
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: apikey
+      in: header
