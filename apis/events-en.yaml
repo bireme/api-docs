@@ -185,6 +185,13 @@ paths:
             enum:
               - json
               - xml
+        - name: sort
+          in: query
+          description: The sort parameter arranges search results in either ascending (ASC) or descending (DESC) order. Example **created_date DESC**
+          required: false
+          schema:
+            type: string
+
       responses:
         '200':
           description: Success
