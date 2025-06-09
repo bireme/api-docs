@@ -1,0 +1,156 @@
+openapi: 3.0.3
+info:
+  title: Legislation Reference Catalog
+  description: |-
+    The VHL Health Legislation Database is a regional reference source that compiles and indexes health-related legal documents - including legislation, regulations, decrees, and normative acts - from Latin America and the Caribbean.
+
+    The resources included in this catalog are primarily produced and maintained by institutions within the Virtual Health Library (VHL) network. The catalog is freely available online, providing open access to legal and regulatory health information across the region.
+
+  version: v1
+servers:
+  - url: https://api.bvsalud.org/leisref/v1/
+
+paths:
+  /:
+    get:
+      tags:
+        - List legislation resources
+      summary: List legislation resources from VHL database
+      operationId: list
+      parameters:
+        - name: limit
+          in: query
+          description: The limit parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The offset parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized. Apikey code not provided or invalid
+        "404":
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+  /{legislationId}/:
+    get:
+      tags:
+        - Get legislation
+      summary: Retrieve a specific legislation metadata from VHL database
+      operationId: getLegislationById
+      parameters:
+        - name: legislationId
+          in: path
+          description: The unique identifier of the legislation. Example  **1234**
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+
+      responses:
+        "200":
+          description: Successful operation - Legislation details retrieved.
+        "401":
+          description: Unauthorized. Apikey code not provided or invalid.
+        "404":
+          description: Legislation not found.
+      security:
+        - apikey: []
+
+  /search/:
+    get:
+      tags:
+        - Search legislation resources
+      summary: Search legislation resources by query expression
+      operationId: searchByWords
+      parameters:
+        - name: q
+          in: query
+          description: |-
+            The q parameter is used to inform a expression to be searched.
+
+            It's possible to use boolean operators **(AND, OR, AND NOT)** in the query expression.
+
+            Example **public AND health**
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: fq
+          in: query
+          description: The fq parameter is used to filter the result by a expression. Example **country:"Brasil"**
+          required: false
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: The count parameter specifies the number of items that a single response contains. Example **10**
+          required: false
+          schema:
+            type: integer
+        - name: start
+          in: query
+          description: The start parameter is used to exclude from a response the first N items of the result. Example **20**
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: The format parameter control the output format of the result.
+          required: false
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+              - xml
+        - name: sort
+          in: query
+          description: The sort parameter arranges search results in either ascending (ASC) or descending (DESC) order. Example **created_date DESC**
+          required: false
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized. Apikey code not provided or invalid
+        "404":
+          description: Result not found or result error
+      security:
+        - apikey: []
+
+components:
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: apikey
+      in: header
