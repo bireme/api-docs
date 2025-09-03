@@ -1,12 +1,42 @@
 openapi: 3.0.3
 info:
-  title: VHL API's
+  title: BVS API's | VHL API's
   description: |-
-    This is the initial page for the VHL API documentation.
 
-    Here you can find a list of available APIs that can be selected using the dropdown at the top of the page.
+    <strong><em>Texto em Português</em></strong>
 
-    Each API provides detailed information about its endpoints, parameters, and responses to help you integrate with our services efficiently.
+    <strong>Aviso</strong>
+
+    Este repositório contém documentação sobre APIs no contexto da Biblioteca Virtual em Saúde (BVS). Cada API descreve detalhadamente seus endpoints, parâmetros e respostas para integração. Esta documentação e suas APIs destinam-se apenas ao uso interno.
+
+    O acesso via API aos registros bibliográficos da BVS não está disponível para uso público. Esse acesso não é fornecido mediante solicitação específica, parcerias, acordos de licenciamento ou serviços pagos. Os dados bibliográficos podem ser consultados exclusivamente pela interface do Portal Regional da BVS (url: https://bvsalud.org), que oferece recursos de busca avançada e opções de exportação dos resultados em diversos formatos.
+
+    A única API disponível publicamente é a que fornece acesso ao tesauro DeCS. Seu uso está condicionado a um acordo de licenciamento que deve ser solicitado e aprovado antes da implementação. Mais detalhes sobre a API do DeCS estão disponíveis em: <a href="?urls.primaryName=DeCS%20API%20(portugu%C3%AAs)">DeCS API</a>.
+
+    <hr/>
+
+    <strong><em>Texto en Español</em></strong>
+
+    <strong>Aviso</strong>
+
+    Este repositorio contiene documentación sobre APIs en el contexto de la Biblioteca Virtual en Salud (BVS) (url: https://bvsalud.org/es). Cada API describe en detalle sus endpoints, parámetros y respuestas para la integración. Esta documentación y sus APIs están destinadas únicamente para uso interno.
+
+    El acceso vía API a los registros bibliográficos de la BVS no está disponible para uso público. Este acceso no se proporciona mediante solicitudes específicas, asociaciones, acuerdos de licencia o servicios pagos. Los datos bibliográficos solo pueden consultarse a través de la interfaz del Portal Regional de la BVS, que ofrece funciones de búsqueda avanzada y opciones para exportar los resultados en varios formatos.
+
+    La única API disponible públicamente es la que proporciona acceso al tesauro DeCS. Su uso está sujeto a un acuerdo de licencia que debe solicitarse y aprobarse antes de su implementación. Más detalles sobre la API de DeCS están disponibles en: <a href="?urls.primaryName=DeCS%20API%20(espa%C3%B1ol)">DeCS API</a>.
+
+    <hr/>
+
+    <strong><em>Text in English</em></strong>
+
+    <strong>Disclaimer</strong>
+
+    This repository contains documentation about APIs in the context of the Virtual Health Library (VHL). Each API provides detailed information about its endpoints, parameters, and responses for integration. This documentation and its APIs are intended for internal use only.
+
+    Access to bibliographic records from the VHL through an API is not available for public use. This access is not provided under specific requests, partnerships, licensing agreements, or paid services. Bibliographic data can only be consulted through the VHL Regional Portal interface (url: https://bvsalud.org/en/), which offers advanced search features and options for exporting search results in several formats.
+
+    The only publicly available API is the one that provides access to the DeCS thesaurus. Its use is subject to a licensing agreement that must be requested and approved before implementation. Further information about the DeCS API can be accessed at: <a href="?urls.primaryName=DeCS%20API">DeCS API</a>.
+
   version: BIREME/OPS/OMS
 servers:
   - url: https://api.bvsalud.org/
