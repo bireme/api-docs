@@ -170,6 +170,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: fb
+          in: query
+          description: The fb parameter is used to retrieve a specific count of options from a specific filter. Example **country:40**, will return the top 40 countries in the filter set.
+          required: false
+          schema:
+            type: string
         - name: count
           in: query
           description: The count parameter specifies the number of items that a single response contains. Example **10**
