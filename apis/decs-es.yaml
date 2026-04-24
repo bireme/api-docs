@@ -220,6 +220,8 @@ paths:
       responses:
         '200':
           description: Successful result
+      security:
+        - apikey: []
 
 components:
   securitySchemes:

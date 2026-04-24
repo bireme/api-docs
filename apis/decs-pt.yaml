@@ -230,6 +230,7 @@ paths:
           description: Resultado não localizado ou erro no resultado
       security:
         - apikey: []
+
 components:
   securitySchemes:
     apikey:
