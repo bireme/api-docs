@@ -14,28 +14,28 @@ tag:
 
 ## docker-compose desenvolvimento
 dev_build:
-	@docker-compose -f $(COMPOSE_FILE_DEV) build
+	@docker compose -f $(COMPOSE_FILE_DEV) build
 
 dev_start:
-	@docker-compose -f $(COMPOSE_FILE_DEV) up -d
+	@docker compose -f $(COMPOSE_FILE_DEV) up -d
 
 dev_run:
-	@docker-compose -f $(COMPOSE_FILE_DEV) up
+	@docker compose -f $(COMPOSE_FILE_DEV) up
 
 dev_logs:
-	@docker-compose -f $(COMPOSE_FILE_DEV) logs -f
+	@docker compose -f $(COMPOSE_FILE_DEV) logs -f
 
 dev_stop:
-	@docker-compose -f $(COMPOSE_FILE_DEV) stop
+	@docker compose -f $(COMPOSE_FILE_DEV) stop
 
 dev_ps:
-	@docker-compose -f $(COMPOSE_FILE_DEV) ps
+	@docker compose -f $(COMPOSE_FILE_DEV) ps
 
 dev_rm:
-	@docker-compose -f $(COMPOSE_FILE_DEV) rm -f
+	@docker compose -f $(COMPOSE_FILE_DEV) rm -f
 
 dev_sh:
-	@docker-compose -f $(COMPOSE_FILE_DEV) exec api_docs sh
+	@docker compose -f $(COMPOSE_FILE_DEV) exec api_docs sh
 
 
 ## docker-compose prod
@@ -56,31 +56,30 @@ prod_push:
 	@docker push $(IMAGE_NAME) --all-tags
 
 prod_start:
-	@docker-compose --compatibility up -d
+	@docker compose --compatibility up -d
 
 prod_run:
-	@docker-compose --compatibility up
+	@docker compose --compatibility up
 
 prod_logs:
-	@docker-compose --compatibility logs -f
+	@docker compose --compatibility logs -f
 
 prod_stop:
-	@docker-compose --compatibility stop
+	@docker compose --compatibility stop
 
 prod_ps:
-	@docker-compose --compatibility ps
+	@docker compose --compatibility ps
 
 prod_rm:
-	@docker-compose --compatibility rm -f
+	@docker compose --compatibility rm -f
 
 prod_list_images:
 	@docker images $(IMAGE_NAME}
 
 prod_rollback:
 	@echo '*** ROLLBACK TO VERSION $(APP_VERSION) ***'
-	@docker-compose --compatibility stop
-	@docker-compose --compatibility up -d
+	@docker compose --compatibility stop
+	@docker compose --compatibility up -d
 
 prod_exec_shell:
-	@docker-compose --compatibility exec api_docs sh
-
+	@docker compose --compatibility exec api_docs sh
